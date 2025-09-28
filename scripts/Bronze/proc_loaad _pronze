@@ -1,0 +1,115 @@
+/*
+===============================================================================
+Stored Procedure: Load Bronze Layer (Source -> Bronze)
+===============================================================================
+Script Purpose:
+    This stored procedure loads data into the 'bronze' schema from external CSV files. 
+    It performs the following actions:
+    - Truncates the bronze tables before loading data.
+    - Uses the `BULK INSERT` command to load data from csv Files to bronze tables.
+
+Parameters:
+    None. 
+	  This stored procedure does not accept any parameters or return any values.
+
+Usage Example:
+    EXEC bronze.load_bronze;
+===============================================================================
+*/ 
+create or alter procedure bronze.load_bronze as 
+Begin
+    
+    print 'Inserting data into bronze.crm_cust_info'
+    print'------------------------------------------'
+    truncate table bronze.crm_cust_info;
+    BULK INSERT bronze.crm_cust_info
+    FROM 'C:\Users\theas\Downloads\sql-data-warehouse-project\sql-data-warehouse-project\datasets\source_crm\cust_info.csv'
+    WITH (
+    FIRSTROW = 2,                -- skip header row
+    FIELDTERMINATOR = ',',       -- column delimiter
+    ROWTERMINATOR = '\n',        -- line delimiter
+    TABLOCK                     -- table-level lock for faster load
+    ); 
+            
+                -- select COUNT(*) from Bronze.crm_cust_info; 
+
+
+    TRUNCATE TABLE bronze.crm_prd_info;
+    print'>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>..'
+    print'Inserting data into crm_prd_info'
+     print'>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>..'
+    BULK INSERT bronze.crm_prd_info
+    FROM 'C:\Users\theas\Downloads\sql-data-warehouse-project\sql-data-warehouse-project\datasets\source_crm\prd_info.csv'
+    WITH (
+        FIRSTROW = 2,
+        FIELDTERMINATOR = ',',
+        tablock
+   
+    );
+
+                -- SELECT COUNT(*) FROM bronze.crm_prd_info;
+print'^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^'
+print'Inserting into crm_sales_details'
+print'^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^'
+    TRUNCATE TABLE bronze.crm_sales_details;
+    BULK INSERT bronze.crm_sales_details
+    FROM 'C:\Users\theas\Downloads\sql-data-warehouse-project\sql-data-warehouse-project\datasets\source_crm\sales_details.csv'
+    WITH (
+        FIRSTROW = 2,
+        FIELDTERMINATOR = ',',
+        tablock
+   
+    );
+
+                -- select * from bronze.crm_sales_details; 
+
+
+print'>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
+print'erp_cust_az12'
+print'>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
+    TRUNCATE TABLE bronze.erp_cust_az12;
+
+    BULK INSERT bronze.erp_cust_az12
+    FROM 'C:\Users\theas\Downloads\sql-data-warehouse-project\sql-data-warehouse-project\datasets\source_erp\CUST_AZ12.csv'
+    WITH (
+        FIRSTROW = 2,
+        FIELDTERMINATOR = ',',
+        tablock
+   
+    );
+
+                -- select * from bronze.erp_cust_az12; 
+print'-----------------------------'   
+print'Inserting into erp_loc_a101'   
+print'-----------------------------'   
+    TRUNCATE TABLE bronze.erp_loc_a101
+
+    BULK INSERT bronze.erp_loc_a101
+    FROM 'C:\Users\theas\Downloads\sql-data-warehouse-project\sql-data-warehouse-project\datasets\source_erp\LOC_A101.csv'
+    WITH (
+        FIRSTROW = 2,
+        FIELDTERMINATOR = ',',
+        tablock
+   
+    );
+
+  print'**************************************'           --select * from bronze.erp_loc_a101; 
+print'Inserting Data into erp_px_cat_g1v2 Table'
+print'**************************************'   
+    TRUNCATE TABLE bronze.erp_px_cat_g1v2
+
+    BULK INSERT bronze.erp_px_cat_g1v2
+    FROM 'C:\Users\theas\Downloads\sql-data-warehouse-project\sql-data-warehouse-project\datasets\source_erp\PX_CAT_G1V2.csv'
+    WITH (
+    FIRSTROW = 2,
+    FIELDTERMINATOR = ',',
+    tablock
+   
+    ); 
+end;
+
+exec Bronze.load_bronze
+
+
+
+
