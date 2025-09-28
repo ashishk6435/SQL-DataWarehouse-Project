@@ -6,9 +6,7 @@ DDL Script: Create Bronze tables
     Run this script to re-define the DDL Structure of Bronze Tables.
 */ 
 
-create schema Bronze;
-create schema Silver;
-create schema Gold;
+
 IF OBJECT_ID('bronze.crm_cust_info', 'U') IS NOT NULL
     DROP TABLE bronze.crm_cust_info;
 GO
